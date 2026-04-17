@@ -57,6 +57,7 @@ pip install -r requirements.txt
   - `Read Messages/View Channels`
   - `Embed Links`
 - Copy the generated URL and visit it to invite the bot to your server
+- **Note:** When invited to a server, an appropriate role will need to be assigned to the bot that allows it to view any channel in which it is to be used.
 
 ### 6. **Configure Environment Variables**
 Create a `.env` file in the same directory as `bot.py`:
@@ -147,6 +148,7 @@ DISCORD_TOKEN=your_bot_token_here
 
 ### Bot Not Responding to Commands:
 - Make sure the bot has been invited with proper permissions
+- Verify the bot has an assigned role that allows it to view the channel in which it is to be used
 - Try `/sync` to refresh the bot's commands
 - Check that the bot is online in your server
 
