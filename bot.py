@@ -99,7 +99,7 @@ class LootView(discord.ui.View):
         )
 
         # Update the message with results (embed only, no content duplication)
-        original_message = await interaction.channel.fetch_message(self.message_id)
+        original_message = interaction.message if interaction.message else await interaction.channel.fetch_message(self.message_id)
         
         await original_message.edit(
             content=None,  # Remove content to avoid duplication
@@ -112,7 +112,7 @@ class LootView(discord.ui.View):
     async def update_message(self, interaction: discord.Interaction):
         """Update the loot message with current participant count"""
         try:
-            original_message = await interaction.channel.fetch_message(self.message_id)
+            original_message = interaction.message if interaction.message else await interaction.channel.fetch_message(self.message_id)
             participant_list = "\n".join([f"• {user.mention}" for user in self.participants])
             content = f"**Loot: {self.item_name}**\n\nParticipants ({len(self.participants)}):\n{participant_list if participant_list else 'No participants yet'}"
             
@@ -127,6 +127,13 @@ class LootView(discord.ui.View):
             await original_message.edit(content=content, embed=embed, view=self)
         except Exception as e:
             print(f"Error updating message {self.message_id}: {e}")
+            try:
+                await interaction.response.send_message(
+                    "❌ Could not update the loot message. Please make sure the bot has permission to edit messages.",
+                    ephemeral=True
+                )
+            except Exception:
+                pass
 
 
 @bot.event
