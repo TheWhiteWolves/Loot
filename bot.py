@@ -16,10 +16,11 @@ loot_sessions: Dict[int, dict] = {}
 
 
 class LootView(discord.ui.View):
-    def __init__(self, item_name: str, message_id: int):
+    def __init__(self, item_name: str, message_id: int, initiator_id: int):
         super().__init__(timeout=None)
         self.item_name = item_name
         self.message_id = message_id
+        self.initiator_id = initiator_id
         self.participants: Set[discord.User] = set()
         self.ended = False
 
@@ -50,6 +51,13 @@ class LootView(discord.ui.View):
 
     @discord.ui.button(label="End Loot", style=discord.ButtonStyle.red, custom_id="loot_end")
     async def end_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.initiator_id:
+            await interaction.response.send_message(
+                "❌ Only the user who started this loot can end it!",
+                ephemeral=True
+            )
+            return
+
         if self.ended:
             await interaction.response.send_message(
                 "❌ This loot has already ended!",
@@ -160,7 +168,7 @@ async def loot_command(interaction: discord.Interaction, item: str):
     # Defer the response to avoid timeout with emojis/special characters
     await interaction.response.defer()
     
-    view = LootView(item, 0)  # Placeholder message_id, will be set after sending
+    view = LootView(item, 0, interaction.user.id)  # Placeholder message_id, will be set after sending
     
     embed = discord.Embed(
         title=f"🎲 Loot: {item}",
