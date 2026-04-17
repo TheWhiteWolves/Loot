@@ -106,21 +106,16 @@ class LootView(discord.ui.View):
             inline=False
         )
 
-        # Update the message with results (embed only, no content duplication)
-        original_message = interaction.message if interaction.message else await interaction.channel.fetch_message(self.message_id)
-        
-        await original_message.edit(
+        # Update the message with results
+        await interaction.message.edit(
             content=None,  # Remove content to avoid duplication
             embed=embed,   # Embed contains all results and winner info
             view=None      # Remove buttons after ending
         )
 
-        # Winner announcement is already in the updated message above
-
     async def update_message(self, interaction: discord.Interaction):
         """Update the loot message with current participant count"""
         try:
-            original_message = interaction.message if interaction.message else await interaction.channel.fetch_message(self.message_id)
             participant_list = "\n".join([f"• {user.mention}" for user in self.participants])
             content = f"**Loot: {self.item_name}**\n\nParticipants ({len(self.participants)}):\n{participant_list if participant_list else 'No participants yet'}"
             
@@ -132,7 +127,7 @@ class LootView(discord.ui.View):
             )
             embed.set_footer(text="React with Join to participate in the loot roll")
             
-            await original_message.edit(content=content, embed=embed, view=self)
+            await interaction.message.edit(content=content, embed=embed, view=self)
         except Exception as e:
             print(f"Error updating message {self.message_id}: {e}")
             try:

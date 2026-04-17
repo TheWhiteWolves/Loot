@@ -56,7 +56,6 @@ pip install -r requirements.txt
   - `Send Messages`
   - `Read Messages/View Channels`
   - `Embed Links`
-  - `Use Slash Commands`
 - Copy the generated URL and visit it to invite the bot to your server
 
 ### 6. **Configure Environment Variables**
@@ -157,7 +156,7 @@ DISCORD_TOKEN=your_bot_token_here
 
 ### Permission Issues:
 - Regenerate the invite URL with correct scopes and permissions
-- Make sure the bot has "Use Slash Commands" permission
+- Make sure you selected the `applications.commands` scope when inviting the bot
 
 ## 📝 Notes
 
