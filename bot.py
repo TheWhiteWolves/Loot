@@ -89,7 +89,7 @@ class LootView(discord.ui.View):
         embed = discord.Embed(
             title=f"✅ Loot Complete: {self.item_name}",
             color=discord.Color.gold(),
-            description="Rolling complete!"
+            description=f"Rolling complete! Ended by {interaction.user.mention}"
         )
 
         # Add all participants and their rolls
