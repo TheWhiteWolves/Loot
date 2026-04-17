@@ -103,7 +103,48 @@ Bot: Rolls and announces results:
      🏆 Winner: User B with a roll of 87!
 ```
 
-## 🔧 Troubleshooting
+## � Running with Docker
+
+### Using Docker Compose (Recommended)
+
+Create a `compose.yaml` file in your project directory:
+
+```yaml
+services:
+  loot-bot:
+    build: https://github.com/TheWhiteWolves/Loot.git#main
+    container_name: loot-bot
+    restart: unless-stopped
+    # This tells Docker to pull all the variables from your env file
+    env_file:
+      - .env
+```
+
+Then run:
+```bash
+docker compose up -d
+```
+
+### Using Docker CLI
+
+Build the image:
+```bash
+docker build -t loot-bot https://github.com/TheWhiteWolves/Loot.git#main
+```
+
+Run the container:
+```bash
+docker run -d --name loot-bot --restart unless-stopped --env-file .env loot-bot
+```
+
+### Environment File Setup
+
+Create a `.env` file in the same directory as your `compose.yaml`:
+```env
+DISCORD_TOKEN=your_bot_token_here
+```
+
+## �🔧 Troubleshooting
 
 ### Bot Not Responding to Commands:
 - Make sure the bot has been invited with proper permissions
