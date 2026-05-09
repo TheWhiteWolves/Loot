@@ -44,7 +44,7 @@ class LootView(discord.ui.View):
         else:
             self.participants.add(interaction.user)
             button.label = "Leave"
-            button.style = discord.ButtonStyle.red
+            button.style = discord.ButtonStyle.blurple
             await interaction.response.send_message(
                 f"✅ You've joined the loot for **{self.item_name}**! Current participants: {len(self.participants)}",
                 ephemeral=True
