@@ -69,15 +69,27 @@ class LootView(discord.ui.View):
             )
             return
 
-        if len(self.participants) == 0:
-            await interaction.response.send_message(
-                "❌ No participants have joined yet! Can't end an empty loot.",
-                ephemeral=True
-            )
-            return
-
         self.ended = True
         await interaction.response.defer()
+
+        if len(self.participants) == 0:
+            embed = discord.Embed(
+                title=f"✅ Loot Complete: {self.item_name}",
+                color=discord.Color.gold(),
+                description=f"Loot ended by {interaction.user.mention}"
+            )
+            embed.add_field(
+                name="Result",
+                value="No participants joined, so no roll was performed.",
+                inline=False
+            )
+
+            await interaction.message.edit(
+                content=None,
+                embed=embed,
+                view=None
+            )
+            return
 
         # Roll for each participant
         results: List[Tuple[discord.User, int]] = []
