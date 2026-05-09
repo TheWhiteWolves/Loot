@@ -34,17 +34,21 @@ class LootView(discord.ui.View):
             return
 
         if interaction.user in self.participants:
+            self.participants.remove(interaction.user)
+            button.label = "Join"
+            button.style = discord.ButtonStyle.green
             await interaction.response.send_message(
-                f"✅ You're already in the participant list for **{self.item_name}**!",
+                f"👋 You've left the loot for **{self.item_name}**. Current participants: {len(self.participants)}",
                 ephemeral=True
             )
-            return
-
-        self.participants.add(interaction.user)
-        await interaction.response.send_message(
-            f"✅ You've joined the loot for **{self.item_name}**! Current participants: {len(self.participants)}",
-            ephemeral=True
-        )
+        else:
+            self.participants.add(interaction.user)
+            button.label = "Leave"
+            button.style = discord.ButtonStyle.red
+            await interaction.response.send_message(
+                f"✅ You've joined the loot for **{self.item_name}**! Current participants: {len(self.participants)}",
+                ephemeral=True
+            )
 
         # Update the message
         await self.update_message(interaction)
