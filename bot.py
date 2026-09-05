@@ -34,23 +34,42 @@ class LootView(discord.ui.View):
             return
 
         if interaction.user in self.participants:
-            self.participants.remove(interaction.user)
-            button.label = "Join"
-            button.style = discord.ButtonStyle.green
             await interaction.response.send_message(
-                f"👋 You've left the loot for **{self.item_name}**. Current participants: {len(self.participants)}",
+                f"✅ You're already in the participant list for **{self.item_name}**! Use Leave if you want to drop out.",
                 ephemeral=True
             )
-        else:
-            self.participants.add(interaction.user)
-            button.label = "Leave"
-            button.style = discord.ButtonStyle.blurple
-            await interaction.response.send_message(
-                f"✅ You've joined the loot for **{self.item_name}**! Current participants: {len(self.participants)}",
-                ephemeral=True
-            )
+            return
 
-        # Update the message
+        self.participants.add(interaction.user)
+        await interaction.response.send_message(
+            f"✅ You've joined the loot for **{self.item_name}**! Current participants: {len(self.participants)}",
+            ephemeral=True
+        )
+
+        await self.update_message(interaction)
+
+    @discord.ui.button(label="Leave", style=discord.ButtonStyle.blurple, custom_id="loot_leave")
+    async def leave_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.ended:
+            await interaction.response.send_message(
+                "❌ This loot has already ended! No more changes can be made.",
+                ephemeral=True
+            )
+            return
+
+        if interaction.user not in self.participants:
+            await interaction.response.send_message(
+                f"ℹ️ You are not currently in the participant list for **{self.item_name}**.",
+                ephemeral=True
+            )
+            return
+
+        self.participants.remove(interaction.user)
+        await interaction.response.send_message(
+            f"👋 You've left the loot for **{self.item_name}**. Current participants: {len(self.participants)}",
+            ephemeral=True
+        )
+
         await self.update_message(interaction)
 
     @discord.ui.button(label="End Loot", style=discord.ButtonStyle.red, custom_id="loot_end")
